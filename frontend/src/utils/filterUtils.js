@@ -27,9 +27,26 @@ export const filterByChoice = (selectedChoice, data) => {
     );
   }
 };
-// price range filter
-export const filterByPriceRange = () => {};
-// rate filter
-export const filterByRating = () => {};
+// price range filter uses numeric vallues so we filter from the selectedPriceRange going down as the selectedPriceRange is used at the maximum value
+export const filterByPriceRange = (selectedPriceRange, data) => {
+  if (!selectedPriceRange) return data;
+  else {
+    return data.filter(({ priceRange }) => priceRange <= selectedPriceRange);
+  }
+};
+// rate filter uses numerical values so we filter from the selectedRate going up as the selectedRate is used as the minimum value
+export const filterByRating = (selectedRating, data) => {
+  if (!selectedRating) return data;
+  else {
+    return data.filter(({ rate }) => rate >= selectedRating);
+  }
+};
 // search filter
-export const filterBySearch = () => {};
+export const filterBySearch = (searchParams, data) => {
+  if (!searchParams) return data;
+  else {
+    return data.filter(({ params }) =>
+      searchParams.toLowerCase().includes(params.toLowerCase)
+    );
+  }
+};

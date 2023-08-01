@@ -7,6 +7,6 @@ import {
   postUpdateProductQtyCartService,
 } from "../../api/apiServices";
 
-import { actionTypes } from "../../utils/actionTypes";
+import { actionTypes } from "../../utils/actionType";
 import { useAuthContext, useProductsContext } from "..";
 import { notify } from "../../utils/utils";

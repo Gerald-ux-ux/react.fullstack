@@ -1,4 +1,4 @@
-import { actionTypes } from "../utils/actionTypes";
+import { actionTypes } from "../utils/actionType";
 
 // Setting the cart initial state to be empty by passing an empty array
 export const initialState = {
