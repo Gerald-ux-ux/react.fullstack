@@ -21,10 +21,11 @@ const CartContextProvider = ({ childern }) => {
   const [disableCart, setDisableCart] = useState(false);
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
+  
   useEffect(() => {
     if (token) {
       setLoadingCart(true);
-      async () => {
+      (async () => {
         try {
           const cartRes = await getCartItemsService(token);
           if (cartRes.status === 200) {
@@ -44,7 +45,7 @@ const CartContextProvider = ({ childern }) => {
         } finally {
           setLoadingCart(false);
         }
-      };
+      })();
     }
   }, [token]);
 
