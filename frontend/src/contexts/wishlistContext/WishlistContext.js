@@ -1,18 +1,22 @@
 import { createContext, useEffect, useReducer, useState } from "react";
 import { useAuthContext, useProductsContext } from "..";
 import { wishListReducer, initialState } from "../../reducers/wishlistReducer";
-import { getWishlistItemsService } from "../../api/apiServices";
+import {
+  deleteProductFromWishlistService,
+  getWishlistItemsService,
+  postAddProductToWishlistService,
+} from "../../api/apiServices";
 import { actionTypes } from "../../utils/actionType";
+import { notify } from "../../utils/utils";
 
 export const WishListContext = createContext();
 
-const WishListContextProvider = ({ childern }) => {
- 
+const WishlistContextProvider = ({ childern }) => {
   const { token } = useAuthContext();
   const [state, dispatch] = useReducer(wishListReducer, initialState);
   const [disableWish, setDisableWish] = useState(false);
   const { updateInCartOrInWish } = useProductsContext();
-  const [loadingWishList, setLoadingWishList] = useState(false);
+  const [loadingWishlist, setLoadingWishList] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -40,4 +44,73 @@ const WishListContextProvider = ({ childern }) => {
       })();
     }
   }, [token]);
+
+  const addProductToWishlist = async (product) => {
+    setDisableWish(true);
+
+    try {
+      const response = await postAddProductToWishlistService(product, token);
+      if (response.status === 200 || response.status === 201) {
+        dispatch({
+          type: actionTypes.ADD_PRODUCT_TO_WISHLIST,
+          payload: [{ ...product, inWish: true }, ...state.wishlist],
+        });
+        updateInCartOrInWish(product._id, "inWish", true);
+      }
+
+      notify("success", "Added to wishlist");
+    } catch (error) {
+      console.log(error);
+      notify(
+        "error",
+        err?.response?.data?.errors
+          ? err?.response?.data?.errors[0]
+          : "Some Error Occurred!!"
+      );
+    } finally {
+      setDisableWish(false);
+    }
+  };
+
+  const deleteProductFromWishlist = async (productId) => {
+    setDisableWish(true);
+
+    try {
+      const response = await deleteProductFromWishlistService(productId, token);
+      if (response.status === 200 || response.status === 201) {
+        dispatch({
+          type: actionTypes.DELETE_PRODUCTS_FROM_WISHLIST,
+          payload: state.wishlist.filter(({ _id }) => _id !== productId),
+        });
+        updateInCartOrInWish(productId, "inWish", false);
+        notify("warn", "Removed from wishlist");
+      }
+    } catch (error) {
+      console.log(error);
+      notify(
+        "error",
+        err?.response?.data?.errors
+          ? err?.response?.data?.errors[0]
+          : "Some Error Occurred!!"
+      );
+    } finally {
+      setDisableWish(false);
+    }
+  };
+
+  return (
+    <WishlistContext.Provider
+      value={{
+        wishlist: state.wishlist,
+        disableWish,
+        loadingWishlist,
+        addProductToWishlist,
+        deleteProductFromWishlist,
+      }}
+    >
+      {children}
+    </WishlistContext.Provider>
+  );
 };
+
+export default WishlistContextProvider;
