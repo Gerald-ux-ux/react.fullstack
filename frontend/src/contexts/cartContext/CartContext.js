@@ -123,6 +123,51 @@ const CartContextProvider = ({ childern }) => {
     }
   };
 
+  const deleteProductFromCart = async (productId) => {
+    setDisableCart(true);
+    try {
+      const response = await deleteProductFromCartService(productId, token);
+      if (response.status === 200 || response.status === 201) {
+        dispatch({
+          type: actionTypes.DELETE_PRODUCTS_FROM_CART,
+          payload: response.data.cart,
+        });
+        updateInCartOrInWish(productId, "inCart", false);
+        notify("notify", "Products removed from Cart");
+      }
+    } catch (error) {
+      console.log(error);
+      notify(
+        "error",
+        error?.response?.data?.errors
+          ? err?.response?.data?.errors[0]
+          : "Some Error Occurred!!"
+      );
+    } finally {
+      setDisableCart(false);
+    }
+  };
 
-  
+  const clearCart = () => {
+    state.cart.map(async ({ _id }) => {
+      try {
+        const response = await deleteProductFromCartService(_id, token);
+        if (response.status === 200 || response.status === 201) {
+          dispatch({
+            type: actionTypes.DELETE_PRODUCTS_FROM_CART,
+            payload: [],
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        notify(
+          "error",
+          error?.response?.data?.errors
+            ? err?.response?.data?.errors[0]
+            : "Some Error Occurred!!"
+        );
+      }
+    });
+    updateInCartOrInWish();
+  };
 };
