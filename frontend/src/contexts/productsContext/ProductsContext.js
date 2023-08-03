@@ -43,4 +43,121 @@ const ProductsContextProvider = ({ children }) => {
       }
     })();
   }, [token]);
+
+  const getProductsByID = (productId) => {
+    return state.allProducts.find((product) => product._id === productId);
+  };
+
+  const updateInCartOrInWish = (type, productId, value) => {
+    if (productId)
+      dispatch({
+        type: actionTypes.UPDATE_PRODUCTS,
+        payload: state.allProducts.map((item) => {
+          return item._id === productId ? { ...state, [type]: value } : item;
+        }),
+      });
+    else {
+      dispatch({
+        type: actionTypes.UPDATE_PRODUCTS,
+        payload: state.allproducts.map((item) => {
+          return {
+            ...item,
+            inCart: false,
+            qty: 0,
+          };
+        }),
+      });
+    }
+  };
+
+  const applyFilters = (filterType, filterValue) => {
+    dispatch({
+      type: filterTypes.FILTERS,
+      payload: { filterType, filterValue },
+    });
+  };
+
+  const clearFilters = (filterTypes) => {
+    dispatch({
+      type: filterTypes.CLEAR_FILTERS,
+      payload: [],
+    });
+  };
+
+  const trendingProducts = state.allProducts.filter(
+    (product) => product.trending
+  );
+
+  const addAddress = (newAddress) => {
+    dispatch({
+      type: addressTypes.ADD_ADDRESS,
+      payload: [newAddress, { ...state.addressList }],
+    });
+  };
+
+  const updateAddress = (updatedAddress, addressId) => {
+    dispatch({
+      type: addressTypes.UPDATE_ADDRESS,
+      payload: state.addressList.map((item) => {
+        item._id === addressId ? updatedAddress : item;
+      }),
+    });
+    if (currentAddress.id === addressId) {
+      setCurrentAddress(updatedAddress);
+    }
+  };
+
+  const deleteAddress = (addressId) => {
+    dispatch({
+      type: addressTypes.DELETE_ADDRESS,
+      payload: state.addressList.filter(({ id }) => id !== addressId),
+    });
+    if (currentAddress.id !== addressId) {
+      setCurrentAddress({});
+    }
+  };
+
+  const isInCart = (productId) => {
+    state.allProducts.find((item) => {
+      return item._id === productId && item.inCart;
+    });
+  };
+
+  const isInWish = (productId) => {
+    state.allProducts.find((item) => {
+      return item._id === productId && item.inWish;
+    });
+  };
+
+  return (
+    <ProductsContext.Provider
+      value={{
+        allProducts: state.allProducts,
+        wishlist: state.wishlist,
+        filters: state.filters,
+        maxRange: state.maxRange,
+        categoryList: state.categoryList,
+        addressList: state.addressList,
+        isInCart,
+        isInWish,
+        isOrderPlaced,
+        currentAddress,
+        loading,
+        trendingProducts,
+        updateInCartOrInWish,
+        getProductById,
+        applyFilters,
+        clearFilters,
+        addAddress,
+        updateAddress,
+        deleteAddress,
+        setCurrentAddress,
+        setisOrderPlaced,
+      }}
+    >
+      {children}
+    </ProductsContext.Provider>
+  );
 };
+
+export default ProductsContextProvider;
