@@ -48,7 +48,7 @@ const CartContextProvider = ({ childern }) => {
     }
   }, [token]);
 
-  const addProductsToCart = async (product) => {
+  const addProductToCart = async (product) => {
     setDisableCart(true);
     try {
       const response = await postAddProductToCartService(
@@ -170,4 +170,34 @@ const CartContextProvider = ({ childern }) => {
     });
     updateInCartOrInWish();
   };
+
+  const { totalPriceOfCartProducts, actualPriceOfCart } = state.cart.reduce(
+    (accumulator, { qty, price, newPrice }) => ({
+      totalPriceOfCartProducts:
+        accumulator.totalPriceOfCartProducts + qty * price,
+      actualPriceOfCartProducts:
+        accumulator.actualPriceOfCartProducts + qty * price,
+    }),
+    { totalPriceOfCartProducts: 0, actualPriceOfCartProducts: 0 }
+  );
+
+  return (
+    <CartContext.Provider
+      value={{
+        cart: state.cart,
+        disableCart,
+        loadingCart,
+        addProductToCart,
+        updateProductQtyInCart,
+        deleteProductFromCart,
+        totalPriceOfCartProducts,
+        actualPriceOfCart,
+        clearCart,
+      }}
+    >
+      {childern}
+    </CartContext.Provider>
+  );
 };
+
+export default CartContextProvider;
