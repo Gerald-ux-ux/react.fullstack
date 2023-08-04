@@ -1,5 +1,5 @@
 import { createContext, useEffect, useReducer, useState } from "react";
-import { initialState, productsReducer } from "../../reducers/productsReducer";
+import { initialState, productReducer } from "../../reducers/productReducer";
 import {
   getAllCategoriesService,
   getAllProductsService,
@@ -12,7 +12,7 @@ export const ProductsContext = createContext();
 const ProductsContextProvider = ({ children }) => {
   const { token } = useAuthContext();
   const [loading, setLoading] = useState(false);
-  const [state, dispatch] = useReducer(productsReducer, initialState);
+  const [state, dispatch] = useReducer(productReducer, initialState);
   const [currentAddress, setCurrentAddress] = useState(state.addressList[0]);
   const [isOrderPlaced, setisOrderPlaced] = useState(false);
 
@@ -44,7 +44,7 @@ const ProductsContextProvider = ({ children }) => {
     })();
   }, [token]);
 
-  const getProductsByID = (productId) => {
+  const getProductById = (productId) => {
     return state.allProducts.find((product) => product._id === productId);
   };
 
@@ -99,7 +99,7 @@ const ProductsContextProvider = ({ children }) => {
     dispatch({
       type: addressTypes.UPDATE_ADDRESS,
       payload: state.addressList.map((item) => {
-        item._id === addressId ? updatedAddress : item;
+        return item._id === addressId ? updatedAddress : item;
       }),
     });
     if (currentAddress.id === addressId) {

@@ -10,9 +10,8 @@ import {
 import { actionTypes } from "../../utils/actionType";
 import { useAuthContext, useProductsContext } from "..";
 import { notify } from "../../utils/utils";
-import { AuthContext } from "../authContext/AuthContext";
 
-export const cartContext = createContext();
+export const CartContext = createContext();
 
 const CartContextProvider = ({ childern }) => {
   const { token } = useAuthContext();
@@ -21,7 +20,6 @@ const CartContextProvider = ({ childern }) => {
   const [disableCart, setDisableCart] = useState(false);
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
-  
   useEffect(() => {
     if (token) {
       setLoadingCart(true);
@@ -73,7 +71,7 @@ const CartContextProvider = ({ childern }) => {
       notify(
         "error",
         error?.response?.data?.errors
-          ? err?.response?.data?.errors[0]
+          ? error?.response?.data?.errors[0]
           : "Some Error Occurred!!"
       );
     } finally {
@@ -94,20 +92,20 @@ const CartContextProvider = ({ childern }) => {
         if (type === "increment") {
           dispatch({
             type: actionTypes.UPDATE_PRODUCT_QTY_IN_CART,
-            payload: state.cart.map((product) => {
+            payload: state.cart.map((product) =>
               product._id === productId
                 ? { ...product, qty: product.qty + 1 }
-                : product;
-            }),
+                : product
+            ),
           });
         } else {
           dispatch({
             type: actionTypes.UPDATE_PRODUCT_QTY_IN_CART,
-            payload: state.cart.map((product) => {
+            payload: state.cart.map((product) =>
               product._id === productId
                 ? { ...product, qty: product.qty - 1 }
-                : product;
-            }),
+                : product
+            ),
           });
         }
       }
@@ -116,7 +114,7 @@ const CartContextProvider = ({ childern }) => {
       notify(
         "error",
         error?.response?.data?.errors
-          ? err?.response?.data?.errors[0]
+          ? error?.response?.data?.errors[0]
           : "Some Error Occurred!!"
       );
     } finally {
@@ -141,7 +139,7 @@ const CartContextProvider = ({ childern }) => {
       notify(
         "error",
         error?.response?.data?.errors
-          ? err?.response?.data?.errors[0]
+          ? error?.response?.data?.errors[0]
           : "Some Error Occurred!!"
       );
     } finally {
@@ -164,7 +162,7 @@ const CartContextProvider = ({ childern }) => {
         notify(
           "error",
           error?.response?.data?.errors
-            ? err?.response?.data?.errors[0]
+            ? error?.response?.data?.errors[0]
             : "Some Error Occurred!!"
         );
       }

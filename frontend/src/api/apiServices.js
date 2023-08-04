@@ -15,11 +15,11 @@ export const loginService = (email, password) =>
   axios.post(LOGIN_URL, { email, password });
 
 // This function is used to signUp the user with the params passed in
-export const signUpService = (username, email, password) =>
+export const signupService = (username, email, password) =>
   axios.post(SIGNUP_URL, { username, email, password });
 
 // This function just performs a get request to the server and returns all the products
-export const getAllProducts = () => axios.get(PRODUCTS_URL);
+export const getAllProductsService = () => axios.get(PRODUCTS_URL);
 
 //This function just performs a get request to the server and returns a product with the specified id
 export const getProductsByIdService = (productId) =>
