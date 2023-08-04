@@ -21,10 +21,11 @@ const CartContextProvider = ({ childern }) => {
   const [disableCart, setDisableCart] = useState(false);
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
+  
   useEffect(() => {
     if (token) {
       setLoadingCart(true);
-      async () => {
+      (async () => {
         try {
           const cartRes = await getCartItemsService(token);
           if (cartRes.status === 200) {
@@ -44,11 +45,11 @@ const CartContextProvider = ({ childern }) => {
         } finally {
           setLoadingCart(false);
         }
-      };
+      })();
     }
   }, [token]);
 
-  const addProductsToCart = async (product) => {
+  const addProductToCart = async (product) => {
     setDisableCart(true);
     try {
       const response = await postAddProductToCartService(
@@ -123,6 +124,81 @@ const CartContextProvider = ({ childern }) => {
     }
   };
 
+  const deleteProductFromCart = async (productId) => {
+    setDisableCart(true);
+    try {
+      const response = await deleteProductFromCartService(productId, token);
+      if (response.status === 200 || response.status === 201) {
+        dispatch({
+          type: actionTypes.DELETE_PRODUCTS_FROM_CART,
+          payload: response.data.cart,
+        });
+        updateInCartOrInWish(productId, "inCart", false);
+        notify("notify", "Products removed from Cart");
+      }
+    } catch (error) {
+      console.log(error);
+      notify(
+        "error",
+        error?.response?.data?.errors
+          ? err?.response?.data?.errors[0]
+          : "Some Error Occurred!!"
+      );
+    } finally {
+      setDisableCart(false);
+    }
+  };
 
-  
+  const clearCart = () => {
+    state.cart.map(async ({ _id }) => {
+      try {
+        const response = await deleteProductFromCartService(_id, token);
+        if (response.status === 200 || response.status === 201) {
+          dispatch({
+            type: actionTypes.DELETE_PRODUCTS_FROM_CART,
+            payload: [],
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        notify(
+          "error",
+          error?.response?.data?.errors
+            ? err?.response?.data?.errors[0]
+            : "Some Error Occurred!!"
+        );
+      }
+    });
+    updateInCartOrInWish();
+  };
+
+  const { totalPriceOfCartProducts, actualPriceOfCart } = state.cart.reduce(
+    (accumulator, { qty, price, newPrice }) => ({
+      totalPriceOfCartProducts:
+        accumulator.totalPriceOfCartProducts + qty * price,
+      actualPriceOfCartProducts:
+        accumulator.actualPriceOfCartProducts + qty * price,
+    }),
+    { totalPriceOfCartProducts: 0, actualPriceOfCartProducts: 0 }
+  );
+
+  return (
+    <CartContext.Provider
+      value={{
+        cart: state.cart,
+        disableCart,
+        loadingCart,
+        addProductToCart,
+        updateProductQtyInCart,
+        deleteProductFromCart,
+        totalPriceOfCartProducts,
+        actualPriceOfCart,
+        clearCart,
+      }}
+    >
+      {childern}
+    </CartContext.Provider>
+  );
 };
+
+export default CartContextProvider;
