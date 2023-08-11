@@ -11,6 +11,9 @@ import {
   ProductsContextProvider,
   WishlistContextProvider,
 } from "./contexts";
+import { createServer } from "./server";
+
+createServer();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

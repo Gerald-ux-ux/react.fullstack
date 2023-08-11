@@ -20,29 +20,48 @@ const ProductsContextProvider = ({ children }) => {
     setLoading(true);
     (async () => {
       try {
-        const productsRes = await getAllProductsService();
-        if (productsRes.status === 200) {
+        const response = await getAllProductsService();
+        if (response.status === 200) {
           dispatch({
             type: actionTypes.INITIALIZE_PRODUCTS,
-            payload: productsRes.data.products,
+            payload: response.data.products,
           });
         }
-
-        const categoryRes = await getAllCategoriesService();
-
-        if (categoryRes.status === 200) {
-          dispatch({
-            type: actionTypes.INITIALIZE_CATEGORIES,
-            payload: categoryRes.data.categories,
-          });
-        }
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       } finally {
         setLoading(false);
       }
     })();
   }, [token]);
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   (async () => {
+  //     try {
+  //       const productsRes = await getAllProductsService();
+  //       if (productsRes.status === 200) {
+  //         dispatch({
+  //           type: actionTypes.INITIALIZE_PRODUCTS,
+  //           payload: productsRes.data.products,
+  //         });
+  //         return productsRes.data.products;
+  //       }
+  //       // const categoryRes = await getAllCategoriesService();
+  //       // if (categoryRes.status === 200) {
+  //       //   dispatch({
+  //       //     type: actionTypes.INITIALIZE_CATEGORIES,
+  //       //     payload: categoryRes.data.categories,
+  //       //   });
+  //       // }
+  //     } catch (error) {
+  //       console.log(error);
+  //       console.log("Products error", error.response.data);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   })();
+  // }, [token]);
 
   const getProductById = (productId) => {
     return state.allProducts.find((product) => product._id === productId);

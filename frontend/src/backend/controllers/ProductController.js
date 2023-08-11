@@ -12,13 +12,14 @@ import { Response } from "miragejs";
 
 export const getAllProductsHandler = () => {
   try {
-    return new Response(200, {}, { products: this.db.products });
+    const products = this.db.products;
+    return new Response(200, {}, { products });
   } catch (error) {
     return new Response(
       500,
       {},
       {
-        error,
+        error: ["Server error"],
       }
     );
   }

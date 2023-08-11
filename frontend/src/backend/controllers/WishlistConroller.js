@@ -26,11 +26,13 @@ export const getWishlistItemHandler = (schema, request) => {
     const userWishlist = schema.wishlist.findBy({ _id: userId }).wishlist;
     return new Response(200, {}, { wishlist: userWishlist });
   } catch (error) {
-    500,
+    return new Response(
+      500,
       {},
       {
         error,
-      };
+      }
+    );
   }
 };
 

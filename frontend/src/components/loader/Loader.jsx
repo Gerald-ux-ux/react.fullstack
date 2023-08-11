@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Navbar = () => {
+const Loader = () => {
   return (
     <div>
       
@@ -8,5 +8,5 @@ const Navbar = () => {
   );
 }
 
-export default Navbar;
+export default Loader;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Order = () => {
+const Profile = () => {
   return (
     <div>
       
@@ -8,5 +8,5 @@ const Order = () => {
   );
 }
 
-export default Order;
+export default Profile;
 

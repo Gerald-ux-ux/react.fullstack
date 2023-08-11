@@ -8,6 +8,10 @@ import {
   CATEGORIES_URL,
 } from "./apiUrls";
 
+
+
+// STATUS 200
+
 // HANDLING HTTP METHODS CRUD OPERATIONS
 
 // This function is used to login the user with the params passed in

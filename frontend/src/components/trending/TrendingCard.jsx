@@ -1,12 +1,16 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
 
-const TrendingCard = () => {
+const TrendingCard = ({ product }) => {
   return (
-    <div>
-      
-    </div>
+    <Link to={`/products/${product._id}`}>
+      <div className="">
+        <div className="">
+          <h1>{product.name}</h1>
+        </div>
+      </div>
+    </Link>
   );
-}
+};
 
 export default TrendingCard;
-

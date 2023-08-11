@@ -20,32 +20,33 @@ const CartContextProvider = ({ childern }) => {
   const [disableCart, setDisableCart] = useState(false);
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
-  useEffect(() => {
-    if (token) {
-      setLoadingCart(true);
-      (async () => {
-        try {
-          const cartRes = await getCartItemsService(token);
-          if (cartRes.status === 200) {
-            dispatch({
-              type: actionTypes.INITIALIZE_CART,
-              payload: cartRes.data.cart,
-            });
-          }
-        } catch (err) {
-          console.log(err);
-          notify(
-            "error",
-            err?.response?.data?.errors
-              ? err?.response?.data?.errors[0]
-              : err?.response?.data?.message
-          );
-        } finally {
-          setLoadingCart(false);
-        }
-      })();
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     setLoadingCart(true);
+  //     (async () => {
+  //       try {
+  //         const cartRes = await getCartItemsService(token);
+  //         if (cartRes.status === 200) {
+  //           dispatch({
+  //             type: actionTypes.INITIALIZE_CART,
+  //             payload: cartRes.data.cart,
+  //           });
+  //         }
+  //       } catch (err) {
+  //         console.log(err);
+  //         console.log(err.response.data);
+  //         notify(
+  //           "error",
+  //           err?.response?.data?.errors
+  //             ? err?.response?.data?.errors[0]
+  //             : err?.response?.data?.message
+  //         );
+  //       } finally {
+  //         setLoadingCart(false);
+  //       }
+  //     })();
+  //   }
+  // }, [token]);
 
   const addProductToCart = async (product) => {
     setDisableCart(true);
