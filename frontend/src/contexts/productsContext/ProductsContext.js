@@ -1,5 +1,5 @@
 import { createContext, useEffect, useReducer, useState } from "react";
-import { initialState, productsReducer } from "../../reducers/productsReducer";
+import { initialState, productReducer } from "../../reducers/productReducer";
 import {
   getAllCategoriesService,
   getAllProductsService,
@@ -12,7 +12,7 @@ export const ProductsContext = createContext();
 const ProductsContextProvider = ({ children }) => {
   const { token } = useAuthContext();
   const [loading, setLoading] = useState(false);
-  const [state, dispatch] = useReducer(productsReducer, initialState);
+  const [state, dispatch] = useReducer(productReducer, initialState);
   const [currentAddress, setCurrentAddress] = useState(state.addressList[0]);
   const [isOrderPlaced, setisOrderPlaced] = useState(false);
 
@@ -20,31 +20,50 @@ const ProductsContextProvider = ({ children }) => {
     setLoading(true);
     (async () => {
       try {
-        const productsRes = await getAllProductsService();
-        if (productsRes.status === 200) {
+        const response = await getAllProductsService();
+        if (response.status === 200) {
           dispatch({
             type: actionTypes.INITIALIZE_PRODUCTS,
-            payload: productsRes.data.products,
+            payload: response.data.products,
           });
         }
-
-        const categoryRes = await getAllCategoriesService();
-
-        if (categoryRes.status === 200) {
-          dispatch({
-            type: actionTypes.INITIALIZE_CATEGORIES,
-            payload: categoryRes.data.categories,
-          });
-        }
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       } finally {
         setLoading(false);
       }
     })();
   }, [token]);
 
-  const getProductsByID = (productId) => {
+  // useEffect(() => {
+  //   setLoading(true);
+  //   (async () => {
+  //     try {
+  //       const productsRes = await getAllProductsService();
+  //       if (productsRes.status === 200) {
+  //         dispatch({
+  //           type: actionTypes.INITIALIZE_PRODUCTS,
+  //           payload: productsRes.data.products,
+  //         });
+  //         return productsRes.data.products;
+  //       }
+  //       // const categoryRes = await getAllCategoriesService();
+  //       // if (categoryRes.status === 200) {
+  //       //   dispatch({
+  //       //     type: actionTypes.INITIALIZE_CATEGORIES,
+  //       //     payload: categoryRes.data.categories,
+  //       //   });
+  //       // }
+  //     } catch (error) {
+  //       console.log(error);
+  //       console.log("Products error", error.response.data);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   })();
+  // }, [token]);
+
+  const getProductById = (productId) => {
     return state.allProducts.find((product) => product._id === productId);
   };
 
@@ -99,7 +118,7 @@ const ProductsContextProvider = ({ children }) => {
     dispatch({
       type: addressTypes.UPDATE_ADDRESS,
       payload: state.addressList.map((item) => {
-        item._id === addressId ? updatedAddress : item;
+        return item._id === addressId ? updatedAddress : item;
       }),
     });
     if (currentAddress.id === addressId) {

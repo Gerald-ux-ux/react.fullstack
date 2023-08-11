@@ -14,11 +14,13 @@ export const getAllCategoriesHandler = () => {
   try {
     return new Response(200, {}, { categories: this.db.categories });
   } catch (error) {
-    500,
+    return new Response(
+      500,
       {},
       {
         error,
-      };
+      }
+    );
   }
 };
 

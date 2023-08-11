@@ -1,9 +1,9 @@
 import React from "react";
-import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuthContext } from "../contexts";
 
 const RequiresAuth = () => {
-  const loaction = useLocation();
+  const location = useLocation();
   const { token } = useAuthContext();
   return token ? (
     <Outlet />

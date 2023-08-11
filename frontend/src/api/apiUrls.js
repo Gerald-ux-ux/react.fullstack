@@ -4,18 +4,20 @@
 
 const baseUrl = "/api";
 
+// test
+export const TEST_URL = `${baseUrl}/test`;
+
 // Auth urls
 export const SIGNUP_URL = `${baseUrl}/auth/signup`;
 export const LOGIN_URL = `${baseUrl}/auth/login`;
 
-// Products url
-export const Products_URL = `${baseUrl}/products`;
+export const PRODUCTS_URL = `${baseUrl}/products`;
 
-// Categories url
-export const Categories_URL = `${baseUrl}/categories`;
+//category url
+export const CATEGORIES_URL = `${baseUrl}/categories`;
 
-// Cart url
-export const Cart_URL = `${baseUrl}/user/cart`;
+//cart url
+export const CART_URL = `${baseUrl}/user/cart`;
 
-// wish list
-export const wishList_URL = `${baseUrl}/user/wishlist`;
+//wishlist url
+export const WISHLIST_URL = `${baseUrl}/user/wishlist`;

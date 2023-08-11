@@ -38,7 +38,7 @@ export const getCartItemsHandler = (schema, request) => {
  * body contains {product}
  * */
 
-export const addItemToCartHandlerr = (schema, request) => {
+export const addItemToCartHandler = (schema, request) => {
   const userId = requiresAuth.call(this, request);
   //
   try {

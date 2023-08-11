@@ -9,9 +9,9 @@ import {
 import { actionTypes } from "../../utils/actionType";
 import { notify } from "../../utils/utils";
 
-export const WishListContext = createContext();
+export const WishlistContext = createContext();
 
-const WishlistContextProvider = ({ childern }) => {
+const WishlistContextProvider = ({ children }) => {
   const { token } = useAuthContext();
   const [state, dispatch] = useReducer(wishListReducer, initialState);
   const [disableWish, setDisableWish] = useState(false);
@@ -34,9 +34,9 @@ const WishlistContextProvider = ({ childern }) => {
           console.log(error);
           notify(
             "error",
-            err?.response?.data?.errors
-              ? err?.response?.data?.errors[0]
-              : err?.response?.data?.message
+            error?.response?.data?.errors
+              ? error?.response?.data?.errors[0]
+              : error?.response?.data?.message
           );
         } finally {
           setLoadingWishList(false);
@@ -63,8 +63,8 @@ const WishlistContextProvider = ({ childern }) => {
       console.log(error);
       notify(
         "error",
-        err?.response?.data?.errors
-          ? err?.response?.data?.errors[0]
+        error?.response?.data?.errors
+          ? error?.response?.data?.errors[0]
           : "Some Error Occurred!!"
       );
     } finally {
@@ -89,8 +89,8 @@ const WishlistContextProvider = ({ childern }) => {
       console.log(error);
       notify(
         "error",
-        err?.response?.data?.errors
-          ? err?.response?.data?.errors[0]
+        error?.response?.data?.errors
+          ? error?.response?.data?.errors[0]
           : "Some Error Occurred!!"
       );
     } finally {
